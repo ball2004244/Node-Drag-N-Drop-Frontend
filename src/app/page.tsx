@@ -1,16 +1,18 @@
 "use client";
 import Image from 'next/image';
-import { Draggable, Droppable } from '@shopify/draggable';
+// import { Draggable, Droppable } from '@shopify/draggable';
+
+// create a component here
+const DragDiv = ({ content }: { content: string }) => {
+  return (
+    <div className="draggable border-2 border-black rounded-xl p-4 m-4">
+      <p className="text-black text-2xl font-bold text-center">{content}</p>
+    </div>
+  );
+};
 
 export default function Home() {
-  const droppable = new Droppable(document.querySelectorAll('.main'), {
-    draggable: '.draggable',
-    dropzone: '.drop-div',
-  });
-
-  droppable.on('droppable:dropped', (event) => {
-    console.log('dropped');
-  });
+  const contents = ['Drag me 1', 'Drag me 2', 'Drag me 3', 'Drag me 4', 'Drag me 5'];
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -39,13 +41,19 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="main relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full">
-        <div className="draggable w-fit h-fit bg-gradient-radial rounded-sm shadow-lg bg-red-400">
-          This div is draggable
-        </div>
+      {/* divide the main into 2 column with width ratio is 3/7 */}
+      <div className="main grid w-full max-w-5xl grid-rows-10 grid-cols-3 gap-4">
+        <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
+          <p className="text-black text-2xl font-bold text-center">Sidebar</p>
+          {
+            contents.map((content, index) => (
+              <DragDiv content={content} key={index} />
+            ))
+          }
 
-        <div className="drop-div w-fit h-fit bg-gradient-radial rounded-sm shadow-lg bg-blue-400">
-          This div is dropzone
+        </div>
+        <div className="content col-span-2 justify-center items-center bg-gray-100">
+          <p className="text-black text-2xl font-bold text-center">Main Content</p>
         </div>
       </div>
 
