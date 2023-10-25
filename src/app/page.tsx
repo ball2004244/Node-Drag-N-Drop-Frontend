@@ -1,18 +1,42 @@
 "use client";
-import Image from 'next/image';
-// import { Draggable, Droppable } from '@shopify/draggable';
+import Image from "next/image";
+import { DragDiv } from "./components/Draggable";
+import Droppable from "./components/Droppable";
+import { useState } from "react";
+import { DndContext } from "@dnd-kit/core";
 
-// create a component here
-const DragDiv = ({ content }: { content: string }) => {
-  return (
-    <div className="draggable border-2 border-black rounded-xl p-4 m-4">
-      <p className="text-black text-2xl font-bold text-center">{content}</p>
-    </div>
-  );
-};
 
-export default function Home() {
-  const contents = ['Drag me 1', 'Drag me 2', 'Drag me 3', 'Drag me 4', 'Drag me 5'];
+interface ContentItem {
+  id: string;
+  content: string;
+}
+
+export default function Page() {
+  const [contents, setContents] = useState<ContentItem[]>([
+    { id: "draggable-1", content: "Drag me 1" },
+    { id: "draggable-2", content: "Drag me 2" },
+    { id: "draggable-3", content: "Drag me 3" },
+    { id: "draggable-4", content: "Drag me 4" },
+    { id: "draggable-5", content: "Drag me 5" },
+  ]);
+  const [droppedContent, setDroppedContent] = useState("");
+  const [droppedId, setDroppedId] = useState("");
+
+  const handleDragEnd = ({ over, active }: any) => {
+    if (over?.id === "droppable") {
+      // use id to search content in contents
+      const activeContent = contents.find((item) => item.id === active.id);
+
+      // remove the draggable- prefix
+      const activeId = active.id.replace("draggable-", "");
+
+      setDroppedId(activeId);
+      setDroppedContent(activeContent?.content || "");
+    } else {
+      setDroppedId("");
+      setDroppedContent("");
+    }
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -28,7 +52,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -43,25 +67,39 @@ export default function Home() {
 
       {/* divide the main into 2 column with width ratio is 3/7 */}
       <div className="main grid w-full max-w-5xl grid-rows-10 grid-cols-3 gap-4">
-        <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
-          <p className="text-black text-2xl font-bold text-center">Sidebar</p>
-          {
-            contents.map((content, index) => (
-              <DragDiv content={content} key={index} />
-            ))
-          }
+        <DndContext onDragEnd={handleDragEnd}>
+          <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
+            <p className="text-black text-2xl font-bold text-center">Sidebar</p>
+            {contents.map((item) => (
+              <DragDiv
+                id={item.id}
+                content={item.content}
+                key={item.id}
+                type={null}
+              />
+            ))}
+          </div>
+          <div className="content col-span-2 justify-center items-center bg-gray-100">
+            <p className="text-black text-2xl font-bold text-center">
+              Main Content
+            </p>
 
-        </div>
-        <div className="content col-span-2 justify-center items-center bg-gray-100">
-          <p className="text-black text-2xl font-bold text-center">Main Content</p>
-        </div>
+
+              <Droppable
+                id="droppable"
+                className="droppable border-2 border-black rounded-xl p-4 m-4 h-48"
+              >
+                <DragDiv id={droppedId} content={droppedContent} type={null} />
+              </Droppable>
+          </div>
+        </DndContext>
       </div>
 
       <div className="footer mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0">
-        <div className="flex flex-col items-center justify-center">
-          Footer
-        </div>
+        <div className="flex flex-col items-center justify-center">Footer</div>
       </div>
     </main>
-  )
+  );
 }
+
+
