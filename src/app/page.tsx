@@ -1,9 +1,6 @@
 "use client";
 import Image from "next/image";
-import { DragDiv } from "./components/Draggable";
-import Droppable from "./components/Droppable";
-import { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+import CodeButtons from "./components/CodeButtons";
 
 // interface ContentItem {
 //   id: string;
@@ -100,7 +97,9 @@ export default function Page() {
       
           <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
             <p className="text-black text-2xl font-bold text-center">Sidebar</p>
+            <CodeButtons />
           </div>
+
           <div className="content col-span-2 justify-center items-center bg-gray-100">
             <p className="text-black text-2xl font-bold text-center">
               Main Content
