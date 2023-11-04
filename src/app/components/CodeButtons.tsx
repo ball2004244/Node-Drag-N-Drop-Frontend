@@ -1,13 +1,25 @@
 "use client";
 import { useState } from "react";
+import { sendCode } from "../apis";
+import { json } from "stream/consumers";
 interface CodeButtonProps {
     code: string;
     text: string;
 }
 
 function CodeButton(codeButton: CodeButtonProps) {
-    const handleClick = (codeButton: CodeButtonProps) => {
-        console.log(`Your code is ${JSON.stringify(codeButton.code)}`);
+    const handleClick = async (codeButton: CodeButtonProps) => {
+        // console.log(`Your code is ${JSON.stringify(codeButton.code)}`);
+        // the mockCode is type of object
+        const mockCode = {
+            "code": {
+                "print": "'Hello World'"
+            }
+        }
+
+        const response = await sendCode(mockCode);
+
+        console.log(response);
     };
     return (
         <div className="code-button z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex">

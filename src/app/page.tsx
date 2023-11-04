@@ -94,19 +94,16 @@ export default function Page() {
 
       {/* //* This is static, non-interactive buttons */}
       <div className="main grid w-full max-w-5xl grid-rows-10 grid-cols-3 gap-4">
-      
-          <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
-            <p className="text-black text-2xl font-bold text-center">Sidebar</p>
-            <CodeButtons />
-          </div>
+        <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
+          <p className="text-black text-2xl font-bold text-center">Sidebar</p>
+          <CodeButtons />
+        </div>
 
-          <div className="content col-span-2 justify-center items-center bg-gray-100">
-            <p className="text-black text-2xl font-bold text-center">
-              Main Content
-            </p>
-
-          </div>
-
+        <div className="content col-span-2 justify-center items-center bg-gray-100">
+          <p className="text-black text-2xl font-bold text-center">
+            Main Content
+          </p>
+        </div>
       </div>
 
       <div className="footer mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0">
