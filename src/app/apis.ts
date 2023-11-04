@@ -1,6 +1,8 @@
+const API_URL: string =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:9000";
 const getRoot = async () => {
   try {
-    const req = await fetch("http://localhost:9000/");
+    const req = await fetch(API_URL);
     const res = await req.json();
 
     return res;
@@ -12,7 +14,8 @@ const getRoot = async () => {
 
 const sendCode = async (code: object) => {
   try {
-    const req = await fetch("http://localhost:9000/", {
+    console.log(API_URL);
+    const req = await fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
