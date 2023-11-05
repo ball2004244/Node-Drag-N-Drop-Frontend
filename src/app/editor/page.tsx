@@ -13,7 +13,6 @@ export default function EditorPage() {
     "[": "]",
     "'": "'",
     '"': '"',
-    "`": "`",
   };
 
   const handleSendCode = async (code: string) => {
@@ -24,8 +23,7 @@ export default function EditorPage() {
         const data = { code: json_code };
 
         const response = await sendCode(data);
-        // const formattedStdout = codeFormatter(response.stdout);
-        console.log(response);
+
         setStatus(response.status);
         setStdout(response.stdout);
         setStderr(response.stderr);
@@ -36,36 +34,43 @@ export default function EditorPage() {
     }
   };
   
-  const codeFormatter = (code: string) => {
-    // replace the \n with a new line
-    const formattedCode = code.replace(/\\n/g, "\n");
+  const outputFormatter = (output: string) => {
+    // process \n
+    const lines = output.split("\n");
+    const formattedOutput = lines.map((line, index) => {
+      return (
+        <span key={index}>
+          {line}
+          <br />
+        </span>
+      );
+    });
 
-    // replace the \t with a tab
-    const formattedCode2 = formattedCode.replace(/\\t/g, "\t");
 
-    return formattedCode2;
-    }
+    return formattedOutput;
+  }
 
+// TODO: Replace textara with WYSIWYG library
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-8">
-      <div className="title flex flex-col items-center justify-center py-10 my-10 min-h-2/3 w-10/12">
+      <div className="title flex flex-col items-center justify-center py-4 my-10 min-h-2/3 w-10/12">
         <h1 className="text-5xl font-bold text-center">Code Editor</h1>
-        <div className="flex items-center justify-center gap-2 flex-row w-full">
+        <div className="flex items-center justify-center gap-2 flex-col lg:flex-row w-full py-6">
           <textarea
-            className="text-2xl font-bold my-10 w-full items-center justify-center resize-none h-[32rem] p-4 border-1 border-xl border-gray-300 rounded-xl dark:border-neutral-800 dark:bg-zinc-800/30"
+            className="code-area text-2xl font-light my-10 w-full items-center justify-center resize-none lg:min-h-[32rem] lg:h-full h-[20rem] p-4 border-1 border-xl border-gray-300 rounded-xl dark:bg-zinc-800 outline-none overflow-auto"
             placeholder="Write your code in Python here..."
             onChange={(e) => setCode(e.target.value)}
             value={code}
           />
-          <div className="flex flex-col gap-2 flex-row bg-black dark:bg-gray-800 rounded-xl w-full h-[32rem] p-4">
-            <h2 className="text-2xl font-bold text-white mb-2">Console</h2>
-            <h3 className="text-xl text-white m-1">Status: {status}</h3>
-            <h3 className="text-xl text-white m-1">Stdout: {stdout}</h3>
-            <h3 className="text-xl text-white m-1">Stderr: {stderr}</h3>
+          <div className="console flex flex-col gap-2 flex-row bg-black dark:bg-gray-800 rounded-xl w-full lg:min-h-[32rem] h-[14rem] p-6 wrap overflow-auto">
+            <h2 className="text-2xl text-white mb-2 font-bold">Console</h2>
+            <h3 className="text-xl text-white m-1"><span className="font-semibold">Status:</span> {status}</h3>
+            <h3 className="text-xl text-white m-1"><span className="font-semibold">Stdout:</span> {outputFormatter(stdout)}</h3>
+            <h3 className="text-xl text-white m-1"><span className="font-semibold">Stderr:</span> {outputFormatter(stderr)}</h3>
           </div>
         </div>
         <button
-          className="bg-gradient-to-r from-zinc-500 to-zinc-600 hover:from-zinc-600 hover:to-zinc-700 text-white font-bold py-2 px-4 rounded w-1/4"
+          className="bg-gradient-to-r from-zinc-500 to-zinc-600 hover:from-zinc-600 hover:to-zinc-700 text-white font-bold py-2 px-4 rounded min-w-[10rem] max-w-[16rem] w-full select-none outline-none"
           onClick={() => handleSendCode(code)}
         >
           Compile
