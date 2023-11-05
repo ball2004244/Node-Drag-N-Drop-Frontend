@@ -24,9 +24,10 @@ export default function EditorPage() {
         const data = { code: json_code };
 
         const response = await sendCode(data);
-        const formattedStdout = codeFormatter(response.stdout);
+        // const formattedStdout = codeFormatter(response.stdout);
+        console.log(response);
         setStatus(response.status);
-        setStdout(formattedStdout);
+        setStdout(response.stdout);
         setStderr(response.stderr);
 
     } catch (err: Error | any) {
