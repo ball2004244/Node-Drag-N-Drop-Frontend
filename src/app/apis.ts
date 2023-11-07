@@ -32,7 +32,7 @@ const sendCode = async (code: object) => {
   }
 };
 
-const sendCommand = async (command: string) => {
+const sendCommand = async (command: object) => {
   try {
     const url = `${API_URL}/cli`
     const req = await fetch(url, {
