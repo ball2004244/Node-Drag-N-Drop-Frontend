@@ -13,15 +13,20 @@ const getRoot = async () => {
   }
 };
 
-const sendCode = async (code: object) => {
+const sendCode = async (code: object, filename: string = "code.py") => {
   try {
     const url = `${API_URL}`;
+    const data = {
+      code: code,
+      filename: filename,
+    };
+
     const req = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(code),
+      body: JSON.stringify(data),
     });
     const res = await req.json();
 
@@ -34,7 +39,7 @@ const sendCode = async (code: object) => {
 
 const sendCommand = async (command: object) => {
   try {
-    const url = `${API_URL}/cli`
+    const url = `${API_URL}/cli`;
     const req = await fetch(url, {
       method: "POST",
       headers: {
@@ -49,5 +54,5 @@ const sendCommand = async (command: object) => {
     console.log(err);
     return err;
   }
-}
+};
 export { getRoot, sendCode, sendCommand };
