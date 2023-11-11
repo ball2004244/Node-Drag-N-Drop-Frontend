@@ -1,50 +1,85 @@
 "use client";
-import { useState } from "react";
-import { sendCode } from "../apis";
-import { json } from "stream/consumers";
+import { useState, useEffect } from "react";
+import { sendCode, getConfig } from "../apis";
 interface CodeButtonProps {
-    code: string;
-    text: string;
+  title: string;
+  inputValue?: string;
+  code: string;
 }
 
 function CodeButton(codeButton: CodeButtonProps) {
-    const handleClick = async (codeButton: CodeButtonProps) => {
-        // console.log(`Your code is ${JSON.stringify(codeButton.code)}`);
-        // the mockCode is type of object
-        const mockCode = {
-            "code": {
-                "print": "'Hello World'"
-            }
-        }
+  const handleClick = async (codeButton: CodeButtonProps) => {
+    // When click, the code will be assembled
+    // TODO: Create a master Data structure to store and assemble the code
+    // TODO: Implement this with React Context API
 
-        const response = await sendCode(mockCode);
+  };
 
-        console.log(response);
-    };
-    return (
-        <div className="code-button z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex">
-            <button className="button w-full border-2 border-black rounded-xl p-4 m-4" onClick={() => handleClick(codeButton)}>
-                <p className="text-black text-2xl font-bold text-center">{codeButton.text}</p>
-            </button>
-        </div>
-    );
+  return (
+    <div className="code-button z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex">
+      <button
+        className="button w-full border-2 border-black rounded-xl p-4 m-4"
+        onClick={() => handleClick(codeButton)}
+      >
+        <p className="text-black text-2xl font-bold text-center">
+          {codeButton.title}
+        </p>
+      </button>
+    </div>
+  );
+}
+
+interface KeywordsDict {
+  [key: string]: string;
 }
 
 // This function accepts a CodeButtonProps object as an argument
 export default function CodeButtons() {
-      // use python code here
-  const [codeButtons, setCodeButtons] = useState<CodeButtonProps[]>([
-    { code: "print", text: "print" },
-    { code: "for", text: "loop" },
-    { code: "if", text: "if" },
-    { code: "\t", text: "tab" },
-  ]);
+  const [codeButtons, setCodeButtons] = useState<CodeButtonProps[]>([]);
+  const [loading, setLoading] = useState(true);
 
-    return (
-        <div className="code-button-list z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex flex-col">
-            {codeButtons.map((codeButton) => (
-                <CodeButton code={codeButton.code} text={codeButton.text} key={codeButton.code} />
-            ))}
-        </div>
-    );
+  // load config on first render
+  useEffect(() => {
+    if (loading) {
+      loadConfigs();
+      setLoading(false);
+    }
+  }, []);
+
+  const loadConfigs = async () => {
+    const response = await getConfig();
+    const config = JSON.parse(response.config);
+    const keywords: KeywordsDict = {};
+
+    const categoriesContent: object[] = Object.values(config);
+
+    categoriesContent.forEach((category: object) => {
+      Object.assign(keywords, category);
+    });
+
+    await loadButtons(keywords);
+  };
+
+  const loadButtons = async (keywords: KeywordsDict) => {
+    const codeButtonsConfig: CodeButtonProps[] = [];
+
+    // set the key as title and value as code
+    Object.keys(keywords).forEach((key) => {
+      codeButtonsConfig.push({ title: key, code: keywords[key] });
+    });
+
+    setCodeButtons(codeButtonsConfig);
+  };
+
+  return (
+    <div className="code-button-list z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex flex-col">
+      {codeButtons.map((codeButton) => (
+        <CodeButton
+          code={codeButton.code}
+          title={codeButton.title}
+          key={codeButton.title}
+        />
+      ))}
+    </div>
+  );
 }
