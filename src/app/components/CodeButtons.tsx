@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
-import { sendCode, getConfig } from "../apis";
+import { useState, useEffect, useContext } from "react";
+import { getConfig } from "../apis";
+import { CodeContext } from "./CodeUI";
 interface CodeButtonProps {
   title: string;
   inputValue?: string;
@@ -8,11 +9,27 @@ interface CodeButtonProps {
 }
 
 function CodeButton(codeButton: CodeButtonProps) {
+  const { pyjsonCode, setPyjsonCode, keywordsTracker, setKeywordsTracker } =
+    useContext(CodeContext);
+
   const handleClick = async (codeButton: CodeButtonProps) => {
     // When click, the code will be assembled
-    // TODO: Create a master Data structure to store and assemble the code
-    // TODO: Implement this with React Context API
+    // Check for the current key in the keywordsTracker
+    if (codeButton.title in keywordsTracker)
+      keywordsTracker[codeButton.title] += 1;
+    else keywordsTracker[codeButton.title] = 1;
 
+    setKeywordsTracker(keywordsTracker);
+
+    // Add the codeIdx to the end of codeButton.title
+    const codeIdx = keywordsTracker[codeButton.title];
+    const pyjsonCodeKey = `${codeButton.title}${codeIdx}`;
+
+    // Get the current pyjsonCode and add the new code
+    const newPyjsonCode = { ...pyjsonCode };
+    newPyjsonCode[pyjsonCodeKey] = codeButton.code;
+
+    setPyjsonCode(newPyjsonCode);
   };
 
   return (
