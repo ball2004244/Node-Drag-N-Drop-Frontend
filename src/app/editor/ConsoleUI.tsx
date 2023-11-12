@@ -22,11 +22,15 @@ interface ConsoleProps {
   stdout: string;
   stderr: string;
   currentConsole: string;
+  height?: string;
 }
 
-const Console = ({ status, stdout, stderr, currentConsole }: ConsoleProps) => {
+const Console = ({ status, stdout, stderr, currentConsole, height }: ConsoleProps) => {
+  if (!height) height = "32rem";
+  const heightStyle = `h-[${height}]`;
+  const consoleStyle = `console flex flex-col gap-2 flex-row bg-black dark:bg-gray-800 rounded-xl w-full lg:min-${heightStyle} h-[14rem] p-6 my-4 wrap overflow-auto break-all`
   return (
-    <div className="console flex flex-col gap-2 flex-row bg-black dark:bg-gray-800 rounded-xl w-full lg:min-h-[32rem] h-[14rem] p-6 wrap overflow-auto break-all">
+    <div className={consoleStyle}>
       <h2 className="text-2xl text-white mb-2 font-bold">{currentConsole}</h2>
       <h3 className="text-xl text-white m-1">
         <span className="font-semibold">Status:</span> {status}
@@ -46,6 +50,7 @@ const ConsoleUI = ({
   stdout,
   stderr,
   currentConsole,
+  height,
 }: ConsoleProps) => {
   return (
     <Console
@@ -53,6 +58,7 @@ const ConsoleUI = ({
       stdout={stdout}
       stderr={stderr}
       currentConsole={currentConsole}
+      height={height}
     />
   );
 };

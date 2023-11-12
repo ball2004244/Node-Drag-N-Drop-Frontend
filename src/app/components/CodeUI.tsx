@@ -24,7 +24,7 @@ export default function CodeUI() {
 
   const [keywordsTracker, setKeywordsTracker] = useState<KeywordsDict>({});
   return (
-    <div className="grid w-full max-w-5xl grid-rows-10 grid-cols-3 gap-4">
+    <div className="grid w-full max-w-5xl grid-cols-3 gap-4">
       <CodeContext.Provider
         value={{
           pyjsonCode,
@@ -33,16 +33,17 @@ export default function CodeUI() {
           setKeywordsTracker,
         }}
       >
-        <div className="sidebar col-span-1 justify-center items-center bg-gray-100">
-          <p className="text-black text-2xl font-bold text-center">Sidebar</p>
-          <CodeButtons />
-        </div>
 
-        <div className="content col-span-2 justify-center items-center bg-gray-100">
-          <p className="text-black text-2xl font-bold text-center">
+        <div className="content col-span-2 justify-center items-center max-h-screen h-full flex flex-col">
+          <p className="text-white text-2xl font-bold text-center">
             Code Area
           </p>
           <CodeDisplay />
+        </div>
+        
+        <div className="sidebar col-span-1 justify-center items-center max-h-screen h-full flex flex-col">
+          <p className="text-white text-2xl font-bold text-center">Sidebar</p>
+          <CodeButtons />
         </div>
       </CodeContext.Provider>
     </div>

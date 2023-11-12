@@ -8,26 +8,26 @@ interface CodeButtonProps {
   code: string;
 }
 
-function CodeButton(codeButton: CodeButtonProps) {
+// dont use any for event
+function CodeButton(codeButton: CodeButtonProps, event: React.MouseEvent) {
   const { pyjsonCode, setPyjsonCode, keywordsTracker, setKeywordsTracker } =
     useContext(CodeContext);
 
+  // Add current line code to main code when clicked
   const handleClick = async (codeButton: CodeButtonProps) => {
-    // When click, the code will be assembled
-    // Check for the current key in the keywordsTracker
+    //Look up current key in keywordsTracker
     if (codeButton.title in keywordsTracker)
       keywordsTracker[codeButton.title] += 1;
     else keywordsTracker[codeButton.title] = 1;
-
     setKeywordsTracker(keywordsTracker);
 
-    // Add the codeIdx to the end of codeButton.title
+    // Use index to count the frequency of keywords, prevent duplicate keys
     const codeIdx = keywordsTracker[codeButton.title];
     const pyjsonCodeKey = `${codeButton.title}${codeIdx}`;
 
     // Get the current pyjsonCode and add the new code
     const newPyjsonCode = { ...pyjsonCode };
-    newPyjsonCode[pyjsonCodeKey] = codeButton.code;
+    newPyjsonCode[pyjsonCodeKey] = "";
 
     setPyjsonCode(newPyjsonCode);
   };
@@ -35,12 +35,10 @@ function CodeButton(codeButton: CodeButtonProps) {
   return (
     <div className="code-button z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex">
       <button
-        className="button w-full border-2 border-black rounded-xl p-4 m-4"
+        className="button w-full border-2 border-black rounded-xl p-4 m-4 text-xl font-bold text-center text-black bg-gray-800 text-white hover:bg-gray-900"
         onClick={() => handleClick(codeButton)}
       >
-        <p className="text-black text-2xl font-bold text-center">
-          {codeButton.title}
-        </p>
+        {codeButton.title}
       </button>
     </div>
   );
@@ -89,7 +87,7 @@ export default function CodeButtons() {
   };
 
   return (
-    <div className="code-button-list z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex flex-col">
+    <div className="code-button-list z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex flex-col overflow-auto h-full">
       {codeButtons.map((codeButton) => (
         <CodeButton
           code={codeButton.code}
