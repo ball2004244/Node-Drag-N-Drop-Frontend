@@ -5,7 +5,7 @@ export default function Page() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {/* <div className="header z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
       </div> */}
-      <div className="main w-full h-full">
+      <div className="main w-full h-full flex flex-col justify-center items-center">
         <CodeUI />
       </div>
 
