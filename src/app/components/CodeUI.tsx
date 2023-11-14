@@ -54,6 +54,7 @@ export default function CodeUI() {
         <div className="content col-span-2 justify-center items-center max-h-screen h-full w-full flex flex-col">
           <p className="text-white text-2xl font-bold text-center">Code Area</p>
           <CodeEditor />
+
           <ConsoleUI
             status={output.status}
             stdout={output.stdout}
