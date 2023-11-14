@@ -8,28 +8,26 @@ interface CodeButtonProps {
   code: string;
 }
 
-// dont use any for event
-function CodeButton(codeButton: CodeButtonProps, event: React.MouseEvent) {
-  const { pyjsonCode, setPyjsonCode, keywordsTracker, setKeywordsTracker } =
-    useContext(CodeContext);
+function CodeButton(codeButton: CodeButtonProps) {
+  const { keywordsTracker, setKeywordsTracker } = useContext(CodeContext);
 
-  // Add current line code to main code when clicked
   const handleClick = async (codeButton: CodeButtonProps) => {
-    //Look up current key in keywordsTracker
-    if (codeButton.title in keywordsTracker)
-      keywordsTracker[codeButton.title] += 1;
-    else keywordsTracker[codeButton.title] = 1;
-    setKeywordsTracker(keywordsTracker);
-
     // Use index to count the frequency of keywords, prevent duplicate keys
-    const codeIdx = keywordsTracker[codeButton.title];
-    const pyjsonCodeKey = `${codeButton.title}${codeIdx}`;
+    let codeIdx = 1;
 
-    // Get the current pyjsonCode and add the new code
-    const newPyjsonCode = { ...pyjsonCode };
-    newPyjsonCode[pyjsonCodeKey] = "";
+    //Look up current key in keywordsTracker
+    if (keywordsTracker[codeButton.title])
+      // get last item in the array
+      for (let i = 0; i < keywordsTracker[codeButton.title].length; i++) {
+        codeIdx = keywordsTracker[codeButton.title][i] + 1;
+      }
 
-    setPyjsonCode(newPyjsonCode);
+    setKeywordsTracker({
+      ...keywordsTracker,
+      [codeButton.title]: keywordsTracker[codeButton.title]
+        ? [...keywordsTracker[codeButton.title], codeIdx]
+        : [codeIdx],
+    });
   };
 
   return (

@@ -12,10 +12,10 @@ interface OutputProps {
   stderr: string;
 }
 // set custom type
-export type PyjsonCodeType = { [key: string]: string };
+export type PyjsonCodeType = { [key: string ]: string };
 
 // use keywordsdict to count the frequency of keywords
-export type KeywordsDict = { [key: string]: number };
+export type KeywordsDict = { [key: string]: Array<number> };
 
 // setup Context to keep track of PyjsonCode
 interface CodeContextProps {
@@ -35,8 +35,14 @@ export default function CodeUI() {
     stderr: "",
   });
 
+  // translate from keywordsTracker to pyjsonCode
+
+
   // Send code to API endpoint
   const handleCompile = async () => {
+    
+    
+
     const response = await sendCode(pyjsonCode);
     setOutput(response);
   };
