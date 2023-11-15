@@ -11,8 +11,11 @@ const CodeEditor = () => {
   const renderKey = (code: [string, string]) => {
     const [key, value] = code;
     return (
-      <div className="flex items-center" key={key}>
-        <p className="text-white text-xl font-semibold text-center mr-4 my-2">
+      <div 
+        className="flex items-center justify-between w-full h-16 font-mono flex"
+        key={key}
+      >
+        <p className="text-white text-xl font-semibold text-center mr-4">
           {key}
         </p>
 
@@ -60,7 +63,7 @@ const CodeEditor = () => {
             }
           }}
         >
-          <Image src="/trash-can.svg" alt="delete" width={24} height={24} />
+          <Image src="/trash-can.svg" alt="delete" width={16} height={16} />
         </button>
       </div>
     );

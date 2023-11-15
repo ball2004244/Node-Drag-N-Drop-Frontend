@@ -34,7 +34,7 @@ export default function CodeUI() {
     stdout: "",
     stderr: "",
   });
-  
+
   const translateCode = (code: PyjsonCodeType): { [key: string]: string } => {
     const compiledCode: { [key: string]: string } = {};
     code.forEach((code) => {
@@ -64,7 +64,7 @@ export default function CodeUI() {
           setKeywordsTracker,
         }}
       >
-        <div className="content col-span-2 justify-center items-center max-h-screen h-full w-full flex flex-col">
+        <div className="content col-span-2 items-center max-h-screen h-full w-full flex flex-col">
           <p className="text-white text-2xl font-bold text-center">Code Area</p>
           <CodeEditor />
 

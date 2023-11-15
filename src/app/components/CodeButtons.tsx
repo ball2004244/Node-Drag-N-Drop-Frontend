@@ -40,9 +40,9 @@ function CodeButton(codeButton: CodeButtonProps) {
   };
 
   return (
-    <div className="code-button z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex">
+    <div className="code-button z-10 w-full h-16 items-center justify-between font-mono flex">
       <button
-        className="button w-full border-2 border-black rounded-xl p-4 m-4 text-xl font-bold text-center text-black bg-gray-800 text-white hover:bg-gray-900"
+        className="button w-full h-full border-2 border-black rounded-xl p-4 m-4 text-xl font-bold text-center text-black bg-gray-800 text-white hover:bg-gray-900"
         onClick={() => handleClick(codeButton)}
       >
         {codeButton.title}
@@ -94,14 +94,15 @@ export default function CodeButtons() {
   };
 
   return (
-    <div className="code-button-list z-10 max-w-5xl w-full items-center justify-between font-mono text-sm flex flex-col overflow-auto h-full">
-      {codeButtons.map((codeButton) => (
-        <CodeButton
-          code={codeButton.code}
-          title={codeButton.title}
-          key={codeButton.title}
-        />
-      ))}
+    // limit the number of rows, if over, then scroll
+    <div className="code-button-list z-10 w-full h-full items-center justify-between font-mono text-sm flex flex-col overflow-auto gap-4">
+        {codeButtons.map((codeButton) => (
+          <CodeButton
+            code={codeButton.code}
+            title={codeButton.title}
+            key={codeButton.title}
+          />
+        ))}
     </div>
   );
 }
