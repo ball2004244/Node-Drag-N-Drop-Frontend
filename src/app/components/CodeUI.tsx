@@ -12,10 +12,10 @@ interface OutputProps {
   stderr: string;
 }
 // set custom type
-export type PyjsonCodeType = { [key: string ]: string };
+export type PyjsonCodeType = [string, string][];
 
 // use keywordsdict to count the frequency of keywords
-export type KeywordsDict = { [key: string]: Array<number> };
+export type KeywordsDict = { [key: string]: number[] };
 
 // setup Context to keep track of PyjsonCode
 interface CodeContextProps {
@@ -28,22 +28,29 @@ interface CodeContextProps {
 export const CodeContext = createContext({} as CodeContextProps);
 
 export default function CodeUI() {
-  const [pyjsonCode, setPyjsonCode] = useState<PyjsonCodeType>({});
+  const [pyjsonCode, setPyjsonCode] = useState<PyjsonCodeType>([]);
   const [output, setOutput] = useState<OutputProps>({
     status: "",
     stdout: "",
     stderr: "",
   });
+  
+  const translateCode = (code: PyjsonCodeType): { [key: string]: string } => {
+    const compiledCode: { [key: string]: string } = {};
+    code.forEach((code) => {
+      const [key, value] = code;
+      compiledCode[key] = value;
+    });
 
-  // translate from keywordsTracker to pyjsonCode
+    return compiledCode;
+  }
 
 
   // Send code to API endpoint
   const handleCompile = async () => {
-    
-    
+    const compiledCode = translateCode(pyjsonCode);
 
-    const response = await sendCode(pyjsonCode);
+    const response = await sendCode(compiledCode);
     setOutput(response);
   };
   const [keywordsTracker, setKeywordsTracker] = useState<KeywordsDict>({});

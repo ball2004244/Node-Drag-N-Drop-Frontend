@@ -9,10 +9,13 @@ interface CodeButtonProps {
 }
 
 function CodeButton(codeButton: CodeButtonProps) {
-  const { keywordsTracker, setKeywordsTracker } = useContext(CodeContext);
+  const { pyjsonCode, setPyjsonCode, keywordsTracker, setKeywordsTracker } =
+    useContext(CodeContext);
 
+  //* This function is called when a code button is clicked
+  //* It adds the code to the pyjsonCode array
+  //* And updates the keywordsTracker
   const handleClick = async (codeButton: CodeButtonProps) => {
-    // Use index to count the frequency of keywords, prevent duplicate keys
     let codeIdx = 1;
 
     //Look up current key in keywordsTracker
@@ -21,6 +24,12 @@ function CodeButton(codeButton: CodeButtonProps) {
       for (let i = 0; i < keywordsTracker[codeButton.title].length; i++) {
         codeIdx = keywordsTracker[codeButton.title][i] + 1;
       }
+
+    // add code to pyjsonCode
+    setPyjsonCode([
+      ...pyjsonCode,
+      [`${codeButton.title}${codeIdx}`, codeButton.inputValue || ""],
+    ]);
 
     setKeywordsTracker({
       ...keywordsTracker,

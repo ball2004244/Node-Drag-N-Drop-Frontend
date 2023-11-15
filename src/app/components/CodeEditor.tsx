@@ -1,41 +1,15 @@
 "use client";
-import { useState, useEffect, useContext, useRef } from "react";
-import { CodeContext } from "./CodeUI";
+import { useContext, useRef } from "react";
+import { CodeContext, KeywordsDict } from "./CodeUI";
 import Image from "next/image";
-import { KeywordsDict } from "./CodeUI";
 
-// TODO: Rewrite the CodeEditor using div and textinput
-// The pyjsonCode will be rendered as a string in the textinput
-// In JSON syntax, with many key-val pairs
-// Where the key is rendered with p tag,
-// And value is rendered with input tag
 const CodeEditor = () => {
-  const { keywordsTracker, setKeywordsTracker } = useContext(CodeContext);
-  const [keys, setKeys] = useState<string[]>([]);
-  const [value, setValue] = useState<string[]>([]);
+  const { pyjsonCode, setPyjsonCode, keywordsTracker, setKeywordsTracker } =
+    useContext(CodeContext);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Update the keys when pyjsonCode changes
-  useEffect(() => {
-    const newKeys: string[] = [];
-    const newValues: string[] = [];
-
-    for (const key in keywordsTracker) {
-      keywordsTracker[key].forEach((idx) => {
-        newKeys.push(`${key}${idx}`);
-        newValues.push("");
-      });
-
-      console.log(keys);
-    }
-
-    setKeys(newKeys);
-    setValue(newValues);
-  }, [keywordsTracker]);
-
-  // Update values based on input
-
-  const renderKey = (key: string) => {
+  const renderKey = (code: [string, string]) => {
+    const [key, value] = code;
     return (
       <div className="flex items-center" key={key}>
         <p className="text-white text-xl font-semibold text-center mr-4 my-2">
@@ -46,11 +20,14 @@ const CodeEditor = () => {
           <input
             className="w-full h-8 bg-gray-700 rounded-lg p-2 text-white text-xl font-semibold text-left outline-none"
             type="text"
-            value={value[keys.indexOf(key)]}
+            value={value}
             onChange={(e) => {
-              const newValues = [...value];
-              newValues[keys.indexOf(key)] = e.target.value;
-              setValue(newValues);
+              const newPyjsonCode = [...pyjsonCode];
+              const codeIdx = newPyjsonCode.findIndex(
+                (code) => code[0] === key
+              );
+              newPyjsonCode[codeIdx][1] = e.target.value;
+              setPyjsonCode(newPyjsonCode);
             }}
           />
         )}
@@ -62,15 +39,23 @@ const CodeEditor = () => {
             const newKeywordsTracker: KeywordsDict = { ...keywordsTracker };
             const temp = key.match(/([a-zA-Z]+)([0-9]*)/) as RegExpMatchArray;
             const keyword: string = temp[1];
-            const rawIdx: string = temp[2];
-            let idx = parseInt(rawIdx);
+            const rawFreq: string = temp[2];
+            let freq: number = parseInt(rawFreq);
+            const currentKeyword = keywordsTracker[keyword];
 
-            // check if idx in keywordsTracker[keyword]
-            if (keywordsTracker[keyword].includes(idx)) {
-              // remove idx from keywordsTracker[keyword]
-              const i = keywordsTracker[keyword].indexOf(idx);
-              newKeywordsTracker[keyword].splice(i, 1);
+            // check if freq is in currentKeyword
+            if (currentKeyword.includes(freq)) {
+              // remove the item with order freq-th from currentKeyword
+              const keywordTrackerIdx = currentKeyword.indexOf(freq);
+              newKeywordsTracker[keyword].splice(keywordTrackerIdx, 1);
 
+              // remove the same item from pyjsonCode
+              const pyjsonIdx = pyjsonCode.findIndex((code) => code[0] === key);
+              const newPyjsonCode = [...pyjsonCode];
+              newPyjsonCode.splice(pyjsonIdx, 1);
+
+              // update pyjsonCode and keywordsTracker
+              setPyjsonCode(newPyjsonCode);
               setKeywordsTracker(newKeywordsTracker);
             }
           }}
@@ -86,7 +71,7 @@ const CodeEditor = () => {
       className="flex flex-col items-left w-full h-[30rem] bg-gray-800 rounded-lg overflow-auto p-4 m-4"
       ref={containerRef}
     >
-      {keys.map(renderKey)}
+      {pyjsonCode.map(renderKey)}
     </div>
   );
 };
