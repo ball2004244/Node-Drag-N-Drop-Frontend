@@ -28,7 +28,7 @@ interface ConsoleProps {
 const Console = ({ status, stdout, stderr, currentConsole, height }: ConsoleProps) => {
   if (!height) height = "32rem";
   const heightStyle = `h-[${height}]`;
-  const consoleStyle = `console flex flex-col gap-2 flex-row bg-black dark:bg-gray-800 rounded-xl w-full lg:min-${heightStyle} h-[14rem] p-6 my-4 wrap overflow-auto break-all`
+  const consoleStyle = `console flex flex-col gap-2 flex-row bg-black dark:bg-gray-800 rounded-xl w-full ${heightStyle} p-6 my-4 wrap overflow-auto break-all`
   return (
     <div className={consoleStyle}>
       <h2 className="text-2xl text-white mb-2 font-bold">{currentConsole}</h2>
